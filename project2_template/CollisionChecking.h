@@ -27,7 +27,6 @@ struct Robot
     // The length of a side of the square robot or the radius of the circle robot
     // Undefined for the point robot.
     double length;
-    hello
 };
 
 // Intersect the point (x,y) with the set of rectangles.  If the point lies outside of all obstacles, return true.
