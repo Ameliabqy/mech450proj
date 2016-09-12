@@ -10,19 +10,18 @@
 // Intersect the point (x,y) with the set of rectangles.  If the point lies outside of all obstacles, return true.
 bool isValidPoint(double x, double y, const std::vector<Rectangle>& obstacles)
 {
-    // IMPLEMENT ME!
     bool valid = true;
     for (uint i = 0; i < obstacles.size(); i++)
     {
-	double x_min = obstacles[i].x;
-	double x_max = obstacles[i].x + obstacles[i].width;
-	double y_min = obstacles[i].y;
-	double y_max = obstacles[i].y + obstacles[i].height;
+    	double x_min = obstacles[i].x;
+    	double x_max = obstacles[i].x + obstacles[i].width;
+    	double y_min = obstacles[i].y;
+    	double y_max = obstacles[i].y + obstacles[i].height;
 	
-	if (x <= x_max && x>= x_min && y <= y_max && y >= y_min)
-	{
- 	   valid = false;
-	}
+    	if (x <= x_max && x>= x_min && y <= y_max && y >= y_min)
+    	{
+     	   valid = false;
+    	}
     }
     return valid;
 }
