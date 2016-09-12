@@ -6,12 +6,15 @@
 //////////////////////////////////////
 
 #include "CollisionChecking.h"
+#include <cmath>
+#include <iostream>
+#include <stdlib.h> 
 
 // Intersect the point (x,y) with the set of rectangles.  If the point lies outside of all obstacles, return true.
 bool isValidPoint(double x, double y, const std::vector<Rectangle>& obstacles)
 {
     bool valid = true;
-    for (uint i = 0; i < obstacles.size(); i++)
+    for (unsigned int i = 0; i < obstacles.size(); i++)
     {
     	double x_min = obstacles[i].x;
     	double x_max = obstacles[i].x + obstacles[i].width;
@@ -66,7 +69,55 @@ bool isValidCircle(double x, double y, double radius, const std::vector<Rectangl
 bool isValidSquare(double x, double y, double theta, double sideLength, const std::vector<Rectangle>& obstacles)
 {
     // IMPLEMENT ME!
-
+    double LocalCoordx[4] = {-sideLength/2, -sideLength/2, sideLength/2, sideLength/2};                            
+    double LocalCoordy[4] = {-sideLength/2, sideLength/2, sideLength/2, -sideLength/2}; 
+    double WorldCoordx[4];
+    double WorldCoordy[4];
+    for (unsigned int j = 0; j < 4; j++)
+    {
+        double NewCoordx = LocalCoordx[j] * cos(theta) - LocalCoordy[j] * sin(theta) + x;
+        double NewCoordy = LocalCoordx[j] * sin(theta) + LocalCoordy[j] * cos(theta) + y;
+        WorldCoordx[j] = NewCoordx;
+        WorldCoordy[j] = NewCoordy;
+    }
+    for (unsigned int p = 0; p < 4; p++)
+    {
+        double x_A1 = WorldCoordx[p];
+        double y_A1 = WorldCoordy[p];
+        if (p == 3)
+        {
+            double x_B1 = WorldCoordx[0];
+            double y_B1 = WorldCoordy[0];
+        }
+        else 
+        {
+            double x_B1 = WorldCoordx[p + 1];
+            double y_B1 = WorldCoordy[p + 1];
+        }
+        for (unsigned int i = 0; i < obstacles.size(); i++)
+        {
+	        double x_min = obstacles[i].x;
+	        double x_max = obstacles[i].x + obstacles[i].width;
+	        double y_min = obstacles[i].y;
+	        double y_max = obstacles[i].y + obstacles[i].height;
+            double ObCoordx[4] = {x_min, x_min, x_max, x_max};
+            double ObCoordy[4] = {y_min, y_max, y_max, y_min};
+            for (unsigned int q = 0; q < 4; q++)
+            {
+                if (q == 3)
+                {
+                    double x_B2 = ObCoordx[0];
+                    double y_B2 = ObCoordy[0];
+                }
+                else 
+                {
+                    double x_B2 = ObCoordx[q + 1];
+                    double y_B2 = ObCoordy[q + 1];
+                }
+            }
+        
+        }
+    }
     return false;
 }
 
