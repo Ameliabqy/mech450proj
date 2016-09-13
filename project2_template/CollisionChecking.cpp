@@ -94,7 +94,6 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
         double y_A1 = WorldCoordy[p];
         double x_B1;
         double y_B1;
-
         
         if (p == 3)
         {
@@ -106,6 +105,7 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
             x_B1 = WorldCoordx[p + 1];
             y_B1 = WorldCoordy[p + 1];
         }
+
         for (unsigned int i = 0; i < obstacles.size(); i++)
         {
             //Loop through obstacles
@@ -117,11 +117,27 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
             double ObCoordy[4] = {y_min, y_max, y_max, y_min};
             double x_B2;
             double y_B2;
+
+            //Convert obstacle to robot coordinate system
+            double x_min_R = x_min*cos(theta) + y_min*sin(theta) - x*cos(theta) - y*sin(theta);
+            double y_min_R = -x_min*sin(theta) + y_min*cos(theta) + x*sin(theta) - y*cos(theta);
+            if(-sideLength/2 <= x_min_R && x_min_R <= sideLength/2 && -sideLength/2 <= y_min_R && y_min_R <= sideLength/2)
+            {
+                //Check if obstacle is inside of robot
+                return false;
+            }
+            if(x_min <= x_A1 && x_A1 <= x_max && y_min <= y_A1 && y_A1 <= y_max)
+            {
+                //Robot is inside obastacle
+                return false;
+            }
+            
+
             for (unsigned int q = 0; q < 4; q++)
             {
                 //Loop through sides on obstacle
                 double x_A2 = ObCoordx[q];
-                double y_A2 = ObCoordx[q];
+                double y_A2 = ObCoordy[q];
                 if (q == 3)
                 {
                     x_B2 = ObCoordx[0];
@@ -137,40 +153,35 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
                 double y_R1 = y_B1 - y_A1;
                 double x_R2 = x_B2 - x_A2;
                 double y_R2 = y_B2 - y_A2;
-                double x_Adiff = -x_A2 + x_A1;
-                double y_Adiff = -y_A2 + y_A1;
+                double x_Adiff = x_A2 - x_A1;
+                double y_Adiff = y_A2 - y_A1;
                 double R2_cross_R1 = x_R2*y_R1 - x_R1*y_R2;
-                double Adiff_cross_R2 = x_Adiff*y_R1 - x_R1*y_Adiff;
-                double Adiff_cross_R1 = x_Adiff*y_R2 - x_R2*y_Adiff;
+                double R1_cross_R2 = -R2_cross_R1;
+                double Adiff_cross_R2 = x_Adiff*y_R2 - x_R2*y_Adiff;
+                double Adiff_cross_R1 = x_Adiff*y_R1 - x_R1*y_Adiff;
                 
-                if(R2_cross_R1 == 0)
+                if(R2_cross_R1 != 0)
                 {
-                    //Lines are parallel, and checking for overlap is outside the scope of the assignment
-                    continue;
-                }
-                else
-                {
-                    //Lines are not parallel
-                    double lambda_1 = Adiff_cross_R2/R2_cross_R1;
-                    double lambda_2 = Adiff_cross_R1/R2_cross_R1;
-                    if (0 <= lambda_1 && lambda_1 <= 1 && lambda_2 >=0 && lambda_2 <= 1)
+                    double lambda_1 = Adiff_cross_R2/R1_cross_R2;
+                    double lambda_2 = Adiff_cross_R1/R1_cross_R2;
+                    if (0 <= lambda_1 && lambda_1 <= 1 && lambda_2 >= 0 && lambda_2 <= 1)
                     {
                         //Line segments intersect
                         return false;
                     }
                 }
-                if (std::max(x_A1, x_B1) <= x_max && std::min(x_A1, x_B1) >= x_min 
-                    && std::max(y_A1, y_B1) <= y_max && std::min(y_A1, y_B1) >= y_min)
-                    //if square is inside the obstacle
-                {
-                        return false;
-                }
-                else if (std::max(x_A1, x_B1) >= x_max && std::min(x_A1, x_B1) <= x_min 
-                    && std::max(y_A1, y_B1) >= y_max && std::min(y_A1, y_B1) <= y_min)
-                //if obstacle is inside square
-                {
-                    return false;
-                }
+                // if (std::max(x_A1, x_B1) <= x_max && std::min(x_A1, x_B1) >= x_min 
+                //     && std::max(y_A1, y_B1) <= y_max && std::min(y_A1, y_B1) >= y_min)
+                //     //if square is inside the obstacle
+                // {
+                //         return false;
+                // }
+                // else if (std::max(x_A1, x_B1) >= x_max && std::min(x_A1, x_B1) <= x_min 
+                //     && std::max(y_A1, y_B1) >= y_max && std::min(y_A1, y_B1) <= y_min)
+                // //if obstacle is inside square
+                // {
+                //     return false;
+                // }
                 
             }
         
