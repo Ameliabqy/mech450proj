@@ -9,6 +9,7 @@
 #include <cmath>
 #include <iostream>
 #include <stdlib.h> 
+#include <algorithm>
 
 // Intersect the point (x,y) with the set of rectangles.  If the point lies outside of all obstacles, return true.
 bool isValidPoint(double x, double y, const std::vector<Rectangle>& obstacles)
@@ -93,6 +94,8 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
         double y_A1 = WorldCoordy[p];
         double x_B1;
         double y_B1;
+
+        
         if (p == 3)
         {
             x_B1 = WorldCoordx[0];
@@ -134,10 +137,12 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
                 double y_R1 = y_B1 - y_A1;
                 double x_R2 = x_B2 - x_A2;
                 double y_R2 = y_B2 - y_A2;
-                double x_Adiff = x_A2 - x_A1;
-                double y_Adiff = y_A2 - y_A1;
+                double x_Adiff = -x_A2 + x_A1;
+                double y_Adiff = -y_A2 + y_A1;
                 double R2_cross_R1 = x_R2*y_R1 - x_R1*y_R2;
                 double Adiff_cross_R2 = x_Adiff*y_R1 - x_R1*y_Adiff;
+                double Adiff_cross_R1 = x_Adiff*y_R2 - x_R2*y_Adiff;
+                
                 if(R2_cross_R1 == 0)
                 {
                     //Lines are parallel, and checking for overlap is outside the scope of the assignment
@@ -147,15 +152,32 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
                 {
                     //Lines are not parallel
                     double lambda_1 = Adiff_cross_R2/R2_cross_R1;
-                    if (0 <= lambda_1 && lambda_1 <= 1)
+                    double lambda_2 = Adiff_cross_R1/R2_cross_R1;
+                    if (0 <= lambda_1 && lambda_1 <= 1 && lambda_2 >=0 && lambda_2 <= 1)
                     {
                         //Line segments intersect
                         return false;
                     }
                 }
+                if (std::max(x_A1, x_B1) <= x_max && std::min(x_A1, x_B1) >= x_min 
+                    && std::max(y_A1, y_B1) <= y_max && std::min(y_A1, y_B1) >= y_min)
+                    //if square is inside the obstacle
+                {
+                        return false;
+                }
+                else if (std::max(x_A1, x_B1) >= x_max && std::min(x_A1, x_B1) <= x_min 
+                    && std::max(y_A1, y_B1) >= y_max && std::min(y_A1, y_B1) <= y_min)
+                //if obstacle is inside square
+                {
+                    return false;
+                }
+                
             }
         
         }
+        
+        
+        
     }
     return true;
 }
