@@ -1,13 +1,12 @@
 ///////////////////////////////////////
 // COMP/ELEC/MECH 450/550
 // Project 2
-// Authors:
-// Date:
+// Authors: Nathan Bucki, Amelia (Qingyun) Bian
+// Date: 09/13/16
 //////////////////////////////////////
 
 #include "CollisionChecking.h"
 #include <cmath>
-#include <iostream>
 #include <stdlib.h> 
 #include <algorithm>
 
@@ -121,7 +120,8 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
             //Convert obstacle to robot coordinate system
             double x_min_R = x_min*cos(theta) + y_min*sin(theta) - x*cos(theta) - y*sin(theta);
             double y_min_R = -x_min*sin(theta) + y_min*cos(theta) + x*sin(theta) - y*cos(theta);
-            if(-sideLength/2 <= x_min_R && x_min_R <= sideLength/2 && -sideLength/2 <= y_min_R && y_min_R <= sideLength/2)
+            if(-sideLength/2 <= x_min_R && x_min_R <= sideLength/2 
+                && -sideLength/2 <= y_min_R && y_min_R <= sideLength/2)
             {
                 //Check if obstacle is inside of robot
                 return false;
@@ -170,18 +170,6 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
                         return false;
                     }
                 }
-                // if (std::max(x_A1, x_B1) <= x_max && std::min(x_A1, x_B1) >= x_min 
-                //     && std::max(y_A1, y_B1) <= y_max && std::min(y_A1, y_B1) >= y_min)
-                //     //if square is inside the obstacle
-                // {
-                //         return false;
-                // }
-                // else if (std::max(x_A1, x_B1) >= x_max && std::min(x_A1, x_B1) <= x_min 
-                //     && std::max(y_A1, y_B1) >= y_max && std::min(y_A1, y_B1) <= y_min)
-                // //if obstacle is inside square
-                // {
-                //     return false;
-                // }
                 
             }
         
