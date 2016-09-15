@@ -14,6 +14,7 @@
 bool isValidPoint(double x, double y, const std::vector<Rectangle>& obstacles)
 {
     bool valid = true;
+    //Check if point is inside obstacle for each obstacle 
     for (unsigned int i = 0; i < obstacles.size(); i++)
     {
     	double x_min = obstacles[i].x;
@@ -93,7 +94,7 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
         double y_A1 = WorldCoordy[p];
         double x_B1;
         double y_B1;
-        
+        //Selecting line segment by selecting each end point 
         if (p == 3)
         {
             x_B1 = WorldCoordx[0];
@@ -118,8 +119,8 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
             double y_B2;
 
             //Convert obstacle to robot coordinate system
-            double x_min_R = x_min*cos(theta) + y_min*sin(theta) - x*cos(theta) - y*sin(theta);
-            double y_min_R = -x_min*sin(theta) + y_min*cos(theta) + x*sin(theta) - y*cos(theta);
+            double x_min_R = (x_min - x)*cos(theta) + (y_min - y)*sin(theta);
+            double y_min_R = (x - x_min)*sin(theta) + (y_min - y)*cos(theta);
             if(-sideLength/2 <= x_min_R && x_min_R <= sideLength/2 
                 && -sideLength/2 <= y_min_R && y_min_R <= sideLength/2)
             {
@@ -148,7 +149,8 @@ bool isValidSquare(double x, double y, double theta, double sideLength, const st
                     x_B2 = ObCoordx[q + 1];
                     y_B2 = ObCoordy[q + 1];
                 }
-                //R2 x R1
+                //Mathematical calculation of determining whether two line segments intersect. 
+                //Check whether the line segment of the square robot and line segment of the obstacle intersect 
                 double x_R1 = x_B1 - x_A1;
                 double y_R1 = y_B1 - y_A1;
                 double x_R2 = x_B2 - x_A2;
